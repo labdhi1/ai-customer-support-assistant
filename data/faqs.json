@@ -1,0 +1,131 @@
+{
+  "intents": [
+    {
+      "id": "track_order",
+      "stores": ["global", "amazon", "flipkart", "myntra", "nykaa", "minimalist"],
+      "priority_keywords": ["track my order", "where is my order", "track order", "order status", "track my parcel", "delivery status"],
+      "examples": [
+        "How can I track my order?",
+        "Where is my parcel right now?",
+        "I want to check the delivery status of my order",
+        "Order status for #12345",
+        "How do I see tracking information for my shipment?",
+        "Track order for me",
+        "When will my order be delivered?"
+      ],
+      "responses": [
+        "You can track your order from the My Orders page — open the order and click 'Track'. If you want, tell me your order number and I can walk you through it.",
+        "To check delivery status, go to My Orders → Track Order. If you don't see tracking yet, it may take a few hours after dispatch.",
+        "Track your parcel in the 'My Orders' section. If you give me the order number I can help locate it faster."
+      ]
+    },
+    {
+      "id": "refund_policy",
+      "stores": ["global", "amazon", "flipkart", "myntra", "nykaa", "minimalist"],
+      "priority_keywords": ["refund", "return", "money back", "refund policy", "refund request"],
+      "examples": [
+        "What is your refund policy?",
+        "How do I return an item?",
+        "Can I get my money back if the product is damaged?",
+        "I want to request a refund",
+        "How long does a refund take?"
+      ],
+      "responses": [
+        "We accept returns within 7 days of delivery for unused items in their original packaging. Want me to list the steps to request a return?",
+        "Refunds are possible within 7 days if the item is unused and returned in original condition. I can guide you through the return form if you'd like."
+      ]
+    },
+    {
+      "id": "cancel_order",
+      "stores": ["global", "amazon", "flipkart", "myntra"],
+      "priority_keywords": ["cancel my order", "cancel order", "order cancellation"],
+      "examples": [
+        "How can I cancel my order?",
+        "I need to cancel an order I just placed",
+        "Please cancel order #9876",
+        "Can I stop my order before it ships?"
+      ],
+      "responses": [
+        "If your order hasn’t shipped yet, you can cancel it from My Orders → Cancel. If it's already shipped, you'll need to request a return after delivery.",
+        "To cancel an unshipped order: open My Orders and press Cancel. If shipping started, let me know and I’ll explain the return option."
+      ]
+    },
+    {
+      "id": "payment_methods",
+      "stores": ["global", "amazon", "flipkart", "myntra", "nykaa"],
+      "priority_keywords": ["payment methods", "payment options", "upi", "credit card", "debit card", "paypal"],
+      "examples": [
+        "What payment methods do you accept?",
+        "Can I pay with UPI?",
+        "Do you accept PayPal?",
+        "Which cards are supported?"
+      ],
+      "responses": [
+        "We accept credit/debit cards, UPI and PayPal. Which payment method would you like details for?",
+        "You can pay with cards, UPI, or PayPal. If you want instructions for UPI or PayPal specifically, tell me which one."
+      ]
+    },
+    {
+      "id": "contact_support",
+      "stores": ["global"],
+      "priority_keywords": ["customer care number", "contact support", "contact number", "customer support"],
+      "examples": [
+        "How do I contact support?",
+        "I want to speak with customer care",
+        "What is the customer service phone number?",
+        "How can I reach help for my account?"
+      ],
+      "responses": [
+        "Our support team is reachable at +1-800-555-1234 and support@example.com. If you'd like, I can draft an email template for your issue.",
+        "You can call +1-800-555-1234 or email support@example.com. Briefly tell me the problem and I can pre-fill the message for you."
+      ]
+    },
+    {
+      "id": "greeting",
+      "stores": ["global"],
+      "priority_keywords": ["hello", "hi", "hey", "good morning", "good evening"],
+      "examples": [
+        "Hi",
+        "Hello there",
+        "Hey bot",
+        "Good morning"
+      ],
+      "responses": [
+        "Hey there — how can I help with your order today?",
+        "Hello! Ask me about tracking, cancellations, refunds or payments — I’ll try to help."
+      ]
+    },
+    {
+      "id": "thanks",
+      "stores": ["global"],
+      "priority_keywords": ["thanks", "thank you", "thx"],
+      "examples": [
+        "Thanks!",
+        "Thank you for your help",
+        "Thx"
+      ],
+      "responses": [
+        "You’re welcome — happy to help!",
+        "Anytime. If you need anything else, just ask."
+      ]
+    }
+  ],
+
+  "fallbacks": [
+    "I’m not certain about that. Would you like me to connect you to support or try searching related topics?",
+    "Sorry — I don’t have that info in my FAQs. I can pass this to support or help with something else.",
+    "I don't know the answer to that right now. Want me to give steps to contact customer support?"
+  ],
+
+  "synonyms": {
+    "delivery": "track_order",
+    "parcel": "track_order",
+    "shipment": "track_order",
+    "return": "refund_policy",
+    "moneyback": "refund_policy",
+    "cancel": "cancel_order",
+    "payment": "payment_methods",
+    "help": "contact_support",
+    "support": "contact_support"
+  }
+}

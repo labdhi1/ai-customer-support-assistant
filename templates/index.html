@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Customer Support — Multi-Store Assistant</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <style>
+    /* quick styling for dropdown */
+    #storeSelect {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      margin-right: 0.5rem;
+      background-color: #fff;
+    }
+    #storeSelect:focus {
+      outline: none;
+      border-color: #005eff;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+  <div class="brand">
+    <div class="logo">🛍️</div>
+    <div class="title">AI Support Assistant — Multi-Store</div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <div class="subtitle">Ask about Amazon, Flipkart, Myntra, Nykaa, Minimalist, or all stores.</div>
+
+    <div class="top-actions">
+      <button id="themeToggle" class="theme-toggle" title="Toggle dark / light">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Dark</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+
+    <main class="chat-area" id="chatArea">
+      <div class="messages" id="messages"></div>
+
+      <form id="chatForm" class="composer" onsubmit="return false;">
+        <select id="storeSelect" aria-label="Choose store">
+          <option value="global">All Stores</option>
+          <option value="amazon">Amazon</option>
+          <option value="flipkart">Flipkart</option>
+          <option value="myntra">Myntra</option>
+          <option value="nykaa">Nykaa</option>
+          <option value="minimalist">Minimalist</option>
+        </select>
+
+        <input
+          id="messageInput"
+          autocomplete="off"
+          placeholder="Ask something like: How can I track my order?"
+        />
+        <button id="sendBtn" type="submit">Send</button>
+      </form>
+    </main>
+
+    <footer class="footer">
+      Prototype assistant • Flask + ML + local FAQ • 2025
+    </footer>
+  </div>
+
+<script>
+// Theme toggle: remembers your choice
+(function(){
+  const root = document.documentElement;
+  const toggle = document.getElementById('themeToggle');
+  const icon = document.getElementById('themeIcon');
+  const label = document.getElementById('themeLabel');
+
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      root.setAttribute('data-theme', 'dark');
+      icon.textContent = '🌙';
+      label.textContent = 'Dark';
+    } else {
+      root.removeAttribute('data-theme');
+      icon.textContent = '☀️';
+      label.textContent = 'Light';
+    }
+  }
+
+  const saved = localStorage.getItem('assistant-theme');
+  if (saved) {
+    applyTheme(saved);
+  } else {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(prefersDark ? 'dark' : 'light');
+  }
+
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('assistant-theme', next);
+    });
+  }
+})();
+
+const messagesEl = document.getElementById('messages');
+const form = document.getElementById('chatForm');
+const input = document.getElementById('messageInput');
+const storeSelect = document.getElementById('storeSelect');
+
+function addMessage(text, who='bot') {
+  const m = document.createElement('div');
+  m.className = 'message ' + (who === 'user' ? 'user' : 'bot');
+  m.innerHTML = `<div class="bubble">${text}</div>`;
+  messagesEl.appendChild(m);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+form.addEventListener('submit', async () => {
+  const text = input.value.trim();
+  if (!text) return;
+  const store = storeSelect.value || 'global';
+  addMessage(`<b>[${store.toUpperCase()}]</b> ${text}`, 'user');
+  input.value = '';
+  addMessage('Typing…', 'bot'); // placeholder until response
+
+  try {
+    const res = await fetch('/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: text, store: store })
+    });
+    const json = await res.json();
+    const last = messagesEl.querySelector('.message.bot:last-of-type');
+    if (last && last.textContent.includes('Typing')) last.remove();
+
+    addMessage(json.reply || "Sorry, I didn't get that.");
+  } catch (err) {
+    const last = messagesEl.querySelector('.message.bot:last-of-type');
+    if (last && last.textContent.includes('Typing')) last.remove();
+    addMessage('Network error. Is the backend running?', 'bot');
+    console.error(err);
+  }
+});
+</script>
+</body>
+</html>
